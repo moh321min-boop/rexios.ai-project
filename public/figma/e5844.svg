@@ -1,0 +1,35 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="360" height="270" viewBox="0 0 360 270" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Mascot/Rex">
+<g id="body">
+<path d="M225 0H345V15H225V0Z" fill="#C6FF3D"/>
+<path d="M210 15H360V30H210V15Z" fill="#C6FF3D"/>
+<path d="M210 30H360V45H210V30Z" fill="#C6FF3D"/>
+<path d="M210 45H360V60H210V45Z" fill="#C6FF3D"/>
+<path d="M210 60H360V75H210V60Z" fill="#C6FF3D"/>
+<path d="M210 75H360V90H210V75Z" fill="#C6FF3D"/>
+<path d="M210 90H300V105H210V90Z" fill="#C6FF3D"/>
+<path d="M210 105H285V120H210V105Z" fill="#C6FF3D"/>
+<path d="M195 120H300V135H195V120Z" fill="#C6FF3D"/>
+<path d="M120 135H300V150H120V135Z" fill="#C6FF3D"/>
+<path d="M315 135H360V150H315V135Z" fill="#C6FF3D"/>
+<path d="M0 150H45V165H0V150Z" fill="#C6FF3D"/>
+<path d="M75 150H300V165H75V150Z" fill="#C6FF3D"/>
+<path d="M0 165H285V180H0V165Z" fill="#C6FF3D"/>
+<path d="M30 180H285V195H30V180Z" fill="#C6FF3D"/>
+<path d="M60 195H270V210H60V195Z" fill="#C6FF3D"/>
+<path d="M90 210H270V225H90V210Z" fill="#C6FF3D"/>
+<path d="M120 225H180V240H120V225Z" fill="#C6FF3D"/>
+<path d="M210 225H270V240H210V225Z" fill="#C6FF3D"/>
+<path d="M120 240H180V255H120V240Z" fill="#C6FF3D"/>
+<path d="M210 240H270V255H210V240Z" fill="#C6FF3D"/>
+<path d="M120 255H195V270H120V255Z" fill="#C6FF3D"/>
+<path d="M210 255H285V270H210V255Z" fill="#C6FF3D"/>
+</g>
+<g id="belly">
+<path d="M165 165H255V180H165V165Z" fill="#FFFBF1"/>
+<path d="M165 180H255V195H165V180Z" fill="#FFFBF1"/>
+<path d="M165 195H255V210H165V195Z" fill="#FFFBF1"/>
+</g>
+<rect id="eye" x="270" y="30" width="15" height="15" fill="#0B2A9E"/>
+</g>
+</svg>

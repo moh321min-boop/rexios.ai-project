@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+verification/
+public/
+package-lock.json
+CONTRIBUTING.md
+ROLES.md
+README.md
+LICENCE

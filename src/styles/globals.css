@@ -1,0 +1,362 @@
+@import 'tailwindcss';
+@source not '../../verification';
+@import './fonts.css';
+@import './application.css';
+@import './problems.css';
+@theme {
+  --font-sans: 'Cairo', sans-serif;
+  --font-brand: 'Pixelify Sans', sans-serif;
+  --color-ink: #12122b;
+  --color-muted: #5b5b7b;
+  --color-page: #f8f1e1;
+  --color-surface: #fffbf1;
+  --color-primary: #0b2a9e;
+  --color-accent: #c6ff3d;
+  --color-subtle: #dccdaa;
+  --color-sunken: #efe4cc;
+  --color-brand-soft: #eef1ff;
+  --color-error: #e5432a;
+  --color-error-text: #b62c1a;
+  --color-error-soft: #ffe3dc;
+  --shadow-pixel: 4px 4px 0 #12122b;
+  --shadow-card: 6px 6px 0 #12122b;
+}
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: white;
+  font-size: 16px;
+  line-height: 1.6;
+}
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 3px solid #1b3fc4;
+  outline-offset: 4px;
+}
+::selection {
+  background: #c6ff3d;
+  color: #12122b;
+}
+.heading {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-ink);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+}
+.field {
+  width: 100%;
+  height: 48px;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background: var(--color-surface);
+  padding: 0 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.field::placeholder {
+  color: var(--color-muted);
+  opacity: 1;
+}
+.field[aria-invalid='true'] {
+  border-color: var(--color-error);
+}
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.caption {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.text-link {
+  color: var(--color-primary);
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+.text-link:hover {
+  text-decoration: underline;
+}
+.checkbox {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border: 2px solid var(--color-ink);
+  border-radius: 4px;
+  background: var(--color-surface);
+}
+.checkbox:checked {
+  background: var(--color-accent) url('/figma/f6711.svg') center / 11px 9px no-repeat;
+}
+/* 880:560 is the desktop frame's column ratio, not a fixed canvas width. */
+.auth-layout {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 7fr);
+  grid-template-areas: 'form art';
+  background: var(--color-page);
+}
+.auth-form-area {
+  grid-area: form;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 88px clamp(24px, 3.333333vw, 48px);
+  position: relative;
+}
+.auth-language {
+  position: absolute;
+  inset-block-start: 32px;
+  inset-inline-end: 32px;
+  z-index: 2;
+}
+.auth-mobile-language {
+  display: none;
+}
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  min-width: 0;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.auth-card > * {
+  min-width: 0;
+}
+.auth-card p {
+  overflow-wrap: anywhere;
+}
+.auth-art {
+  grid-area: art;
+  min-width: 0;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: 60px minmax(340px, 1fr) auto;
+  padding: 40px clamp(32px, 3.333333vw, 64px) clamp(48px, 12.423077dvh, 129.2px);
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+.auth-pixels {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.auth-pixels span {
+  position: absolute;
+}
+.auth-logo {
+  justify-self: start;
+  align-self: start;
+}
+.auth-illustration {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding-block-start: 70px;
+}
+.auth-mascot {
+  display: block;
+  width: min(360px, 100%);
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.auth-panel-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 464px;
+}
+.auth-panel-copy .heading {
+  font-size: clamp(34px, 3.055556vw, 44px);
+}
+.auth-panel-copy p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+/* Compress spacing on laptops; content can still grow for errors and zoom. */
+@media (min-width: 1024px) and (max-height: 900px) {
+  .auth-form-area {
+    padding-block: 72px 24px;
+  }
+  .auth-card {
+    padding: 28px;
+    gap: 12px;
+  }
+  .auth-art {
+    padding-block-end: 48px;
+  }
+  .auth-illustration {
+    padding-block-start: 24px;
+  }
+}
+/* The SVG has 24 pixel columns. Whole-cell sizes avoid seams between its rectangles. */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .auth-mascot {
+    width: 312px;
+    max-width: 100%;
+  }
+}
+/* Use the wider canvas without scaling the page or changing the reference frame. */
+@media (min-width: 1600px) and (min-height: 901px) {
+  .auth-card {
+    max-width: 560px;
+    padding: 40px;
+    gap: 22px;
+  }
+  .auth-card .heading,
+  .auth-panel-copy .heading {
+    font-size: 48px;
+  }
+  .auth-card .field {
+    height: 52px;
+  }
+  .auth-mascot {
+    width: min(480px, 100%);
+  }
+  .auth-panel-copy {
+    max-width: 560px;
+  }
+}
+/* Compact mobile adaptation, not an additional Figma frame. */
+@media (max-width: 1023px) {
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'art' 'form';
+    align-content: start;
+  }
+  .auth-art {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto;
+    grid-template-areas: 'logo language';
+    align-items: center;
+    gap: 16px;
+    padding: 12px max(16px, calc((100% - 480px) / 2));
+  }
+  .auth-logo {
+    grid-area: logo;
+    gap: 8px;
+    padding: 0;
+    min-height: 44px;
+    align-self: center;
+    align-items: center;
+  }
+  .auth-logo img {
+    width: 32px;
+    height: 24px;
+  }
+  .auth-logo span {
+    font-size: 22px;
+  }
+  .auth-mobile-language {
+    display: block;
+    grid-area: language;
+    justify-self: end;
+    z-index: 2;
+    color: var(--color-ink);
+  }
+  .auth-mobile-language button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .auth-mobile-language [role='status'] {
+    inset-inline: auto 0;
+  }
+  .auth-illustration {
+    display: none;
+  }
+  .auth-panel-copy {
+    display: none;
+  }
+  .auth-form-area {
+    padding: 12px 16px 20px;
+  }
+  .auth-language {
+    display: none;
+  }
+  .auth-card {
+    padding: 20px;
+    gap: 10px;
+  }
+  .auth-card .heading {
+    font-size: 32px;
+  }
+  .auth-card .field {
+    height: 44px;
+  }
+  .auth-card .text-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .auth-card > .flex-wrap {
+    align-items: center;
+    column-gap: 6px;
+    row-gap: 0;
+    font-size: 14px;
+  }
+  .auth-card label:has(.checkbox) {
+    min-height: 44px;
+  }
+}
+@media (max-width: 600px) {
+  .heading {
+    font-size: 34px;
+  }
+  .auth-card .heading {
+    font-size: 28px;
+  }
+  .auth-card > div:first-child p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+@media (max-width: 359px) {
+  .auth-card {
+    padding: 12px;
+    gap: 6px;
+  }
+  .auth-card > .flex-wrap .text-link {
+    font-size: 14px;
+  }
+  .auth-art {
+    padding-block: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,8 +1,10 @@
+import { t, useI18n } from '@/i18n'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/context/AuthContext'
 export function AuthPromptModal() {
+  useI18n()
   const { showAuthPrompt, setShowAuthPrompt, authPromptDestination, authPromptReason } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -20,27 +22,27 @@ export function AuthPromptModal() {
       title={
         <>
           <img src="/figma/e1b5f.svg" alt="" width={96} height={72} />
-          Join the community to participate
+          {t('authPromptModal.join_the_community_to_participate')}
         </>
       }
       description={
         authPromptReason === 'Sign in to participate.'
-          ? 'You can read questions and answers as a visitor, but asking, answering and reacting require an account.'
+          ? t('authPromptModal.you_can_read_questions_and_answers_as')
           : authPromptReason
       }
     >
       <Button className="w-full" onClick={() => go('/signup')}>
-        Sign up
+        {t('signUp.sign_up')}
       </Button>
       <Button variant="secondary" className="w-full" onClick={() => go('/signin')}>
-        Sign in
+        {t('signIn.sign_in')}
       </Button>
       <Button
         variant="ghost"
         className="w-full shadow-none"
         onClick={() => setShowAuthPrompt(false)}
       >
-        Continue browsing
+        {t('authPromptModal.continue_browsing')}
       </Button>
     </Modal>
   )

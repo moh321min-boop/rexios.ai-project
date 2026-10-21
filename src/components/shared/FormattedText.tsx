@@ -14,7 +14,7 @@ function inline(text: string): ReactNode[] {
 }
 export function FormattedText({ text }: { text: string }) {
   return (
-    <div className="formatted-text">
+    <div className="formatted-text" dir="auto">
       {text
         .split(/(```[^]*?```)/g)
         .filter(Boolean)

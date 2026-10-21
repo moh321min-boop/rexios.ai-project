@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -11,6 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { label, helperText, error, leftIcon, rightIcon, className, id, required, ...props },
   ref
 ) {
+  useI18n()
   const generatedId = useId()
   const inputId = id ?? generatedId
   const message = error || helperText
@@ -18,7 +20,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <div className="flex w-full flex-col gap-[6px]">
       {label && (
         <label className="label" htmlFor={inputId}>
-          {label}
+          {t(label)}
           {required && ' *'}
         </label>
       )}
@@ -30,6 +32,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         )}
         <input
           {...props}
+          dir={
+            props.dir ??
+            (['email', 'url', 'password'].includes(props.type ?? '')
+              ? 'ltr'
+              : props.value
+                ? 'auto'
+                : undefined)
+          }
           required={required}
           ref={ref}
           id={inputId}
@@ -44,7 +54,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           id={inputId + '-message'}
           className={cn('caption', error ? 'text-error-text' : 'text-muted')}
         >
-          {message}
+          {t(message)}
         </p>
       )}
     </div>

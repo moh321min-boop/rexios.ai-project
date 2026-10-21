@@ -14,6 +14,7 @@ import { ProblemsPage } from '@/pages/ProblemsPage'
 import { ProblemDetailPage } from '@/pages/ProblemDetailPage'
 import { SubmitSolutionPage } from '@/pages/SubmitSolutionPage'
 import { RequireMember } from '@/components/auth/RequireMember'
+import { LandingPage } from '@/pages/LandingPage'
 
 export default function App() {
   return (
@@ -48,8 +49,7 @@ export default function App() {
                   </PageLayout>
                 }
               />
-              {/* Reserved white canvas for the future landing page. */}
-              <Route path="/" element={null} />
+              <Route path="/" element={<LandingPage />} />
 
               {/* Auth & Onboarding screens (standalone layouts) */}
               <Route path="/signin" element={<SignInPage />} />

@@ -1,7 +1,8 @@
 import type { Question } from '@/types'
 export function filterQuestions(
   questions: Question[],
-  filters: { category: string; tag: string; sort: string; query: string }
+  filters: { category: string; tag: string; sort: string; query: string },
+  localizedSearchText: (question: Question) => string = () => ''
 ) {
   const query = filters.query.trim().toLocaleLowerCase('en')
   return questions
@@ -11,7 +12,7 @@ export function filterQuestions(
         (!filters.tag || q.tags.some((t) => t.slug === filters.tag)) &&
         (filters.sort !== 'unanswered' || q.answerCount === 0) &&
         (!query ||
-          [q.title, q.body, ...q.tags.map((t) => t.name)]
+          [q.title, q.body, q.summary, localizedSearchText(q), ...q.tags.map((t) => t.name)]
             .join(' ')
             .toLocaleLowerCase('en')
             .includes(query))

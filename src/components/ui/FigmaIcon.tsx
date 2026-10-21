@@ -13,7 +13,11 @@ export function FigmaIcon({
   return (
     <span
       aria-hidden="true"
-      className={cn('inline-flex shrink-0 items-center justify-center', className)}
+      className={cn(
+        'inline-flex shrink-0 items-center justify-center',
+        asset === '60b9b' && 'directional-icon',
+        className
+      )}
       style={{ width: size, height: size }}
     >
       <img src={'/figma/' + asset + '.svg'} alt="" />

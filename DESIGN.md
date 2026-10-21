@@ -34,7 +34,7 @@ components:
 
 ## Overview
 
-The authoritative references are the saved English Figma properties and original exported screenshots described below. Authentication uses file JKJUxhJscvGDK1U9HC3zfW, signup frame 101:843 and sign-in frame 101:918. This document records the shared design system and subsequent Community, profile and Problems reconstruction. The product serves a technical community. English is implemented first; Arabic remains unavailable. No market assumptions or new visual direction are introduced.
+The authoritative references are the saved English Figma properties and original exported screenshots described below. Authentication uses file JKJUxhJscvGDK1U9HC3zfW, signup frame 101:843 and sign-in frame 101:918. This document records the shared design system and subsequent Community, profile and Problems reconstruction. The product serves a technical community. English and Modern Standard Arabic use shared resource files and a persistent language preference. Arabic adapts the existing layout to RTL; no Arabic Figma frame was supplied. No market assumptions or new visual direction are introduced.
 
 Runtime tokens are owned by `src/styles/globals.css`; this document mirrors those tokens. Saved Figma context lives in `verification/reference/`. It is evidence, not application source, and is excluded from Tailwind scanning.
 
@@ -49,6 +49,8 @@ Accessibility corrections from the final browser audit: small error text uses `e
 Local Cairo fonts use weights 400, 500, 600, and 700. Pixelify Sans 700 supplies the wordmark and the uppercase skill/company badges in the supplied Problems screenshots. Desktop headings are 44px/55px, body copy 16px/25.6px, labels 13px/18.2px, and buttons 15px/21px.
 
 ## Layout
+
+The `/` landing page now follows the user's supplied 1440 × 2190 desktop reference, replacing the earlier blank-root requirement. It uses a 1248px content width, a two-column hero, the original pixel dinosaur SVG, three-column step/role cards and a blue signup banner. The latest user request standardizes Home on the shared Community navbar with a working AR/EN selector. Its browsing note is a dismissible VisitorBanner below the navbar. Below 1024px the hero stacks and the existing hamburger menu is retained. Below 768px the cards stack. These mobile layouts are adaptations. Locked capability text uses the existing accessible muted token instead of the screenshot's pale text. Local comparison captures are generated under `verification/landing/`.
 
 At 1440 × 1040, the form area is 880px and artwork is 560px. Desktop uses fluid 11:7 grid columns from 1024px upwards. The centered card has a 480px maximum width with 36px padding and 18px gaps. Fields are 48px high. Normal document flow accommodates short screens and validation messages without a fixed 1040px canvas.
 
@@ -83,9 +85,9 @@ Saved English frame properties in `verification/reference` are the authority for
 
 Community uses 48px desktop outer padding, 240px categories, flexible cards, 300px widgets and 32px column gaps. Question detail uses the same outer padding with flexible discussion and a 300px sidebar. Forms use 120px desktop horizontal padding, an 828px main card and a 340px sidebar at 1440px; cards have 36px padding and 22px gaps. Large viewports cap these layouts rather than stretching text indefinitely. At intermediate widths sidebars reflow; mobile presents a single column with 16px outer padding and readable controls. These are responsive adaptations because no approved mobile frame is saved.
 
-`Navbar` is shared by all non-auth application pages. At >=1024px the reference links and actions remain in one row. Below 1024px the logo stays left and a 44px hamburger/X button stays right. A non-modal disclosure opens in normal flow below them, containing all navigation and account actions. Escape restores toggle focus; selecting a link or changing the route/breakpoint closes it. The blank landing page has no shell.
+`Navbar` is shared by all non-auth application pages. At >=1024px the reference links and actions remain in one row. Below 1024px the logo stays left and a 44px hamburger/X button stays right. A non-modal disclosure opens in normal flow below them, containing all navigation and account actions. Escape restores toggle focus; selecting a link or changing the route/breakpoint closes it. Home shares this navbar; in Arabic, inline alignment follows RTL.
 
-`QuestionCard`, `Reactions`, `AnswerCard`, `MarkdownEditor`, `Chip`, `Tag`, `Input`, `Textarea` and `Select` provide shared application controls. Textarea starts at the Figma 132px height; Community's MarkdownEditor expands with content. Modal uses native dialog focus containment and background inertness, styled with the saved cream/ink border and shadow tokens. Native select popups remain browser-owned because the saved design only specifies their closed triggers. All displayed counts/content are sample fixtures; missing answer bodies and related discussions are explicitly identified. Arabic, About, notifications and backend integrations have honest unavailable feedback.
+`QuestionCard`, `Reactions`, `AnswerCard`, `MarkdownEditor`, `Chip`, `Tag`, `Input`, `Textarea` and `Select` provide shared application controls. Textarea starts at the Figma 132px height; Community's MarkdownEditor expands with content. Modal uses native dialog focus containment and background inertness, styled with the saved cream/ink border and shadow tokens. Native select popups remain browser-owned because the saved design only specifies their closed triggers. All displayed counts/content are sample fixtures; missing answer bodies and related discussions are explicitly identified. About, notifications and backend integrations have honest, dismissible unavailable feedback. Arabic is implemented using the shared locale store described in docs/LOCALIZATION.md.
 
 ## Problems workflow — approved local screenshot references
 

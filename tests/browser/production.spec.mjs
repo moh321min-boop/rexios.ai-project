@@ -15,7 +15,9 @@ test('normal production disables credentials and ignores persisted demo roles', 
   await page.goto('/signup')
   await expect(page.getByRole('button', { name: 'Sign up', exact: true })).toBeDisabled()
   await page.goto('/')
-  expect(await page.locator('#root').innerHTML()).toBe('')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Where tech skills meet real problems'
+  )
 })
 
 test('explicit public-demo production build accepts fixture credentials', async ({ page }) => {

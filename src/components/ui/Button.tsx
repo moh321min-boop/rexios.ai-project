@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,6 +23,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   ref
 ) {
+  useI18n()
   const variants = {
     primary: 'bg-primary text-surface hover:bg-[#1b3fc4]',
     secondary: 'bg-surface text-ink hover:bg-sunken',
@@ -47,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     >
       {isLoading ? (
         <span
-          aria-label="Loading"
+          aria-label={t('button.loading')}
           className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent"
         />
       ) : (

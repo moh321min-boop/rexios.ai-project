@@ -1,17 +1,16 @@
+import { t, useI18n } from '@/i18n'
 import { useState } from 'react'
 import { FigmaIcon } from '@/components/ui/FigmaIcon'
-export function VisitorBanner() {
+export function VisitorBanner({ message }: { message?: string }) {
+  useI18n()
   const [dismissed, setDismissed] = useState(false)
   return dismissed ? null : (
-    <div className="visitor-banner">
+    <div className="visitor-banner" role="status">
       <FigmaIcon asset="a424c" size={24} />
-      <p>
-        You're browsing as a visitor: you can only read questions and answers. Sign in or create an
-        account to participate.
-      </p>
+      <p>{t(message ?? 'visitorBanner.you_re_browsing_as_a_visitor_you')}</p>
       <button
         type="button"
-        aria-label="Dismiss visitor information"
+        aria-label={t('visitorBanner.dismiss_visitor_information')}
         onClick={() => setDismissed(true)}
       >
         <FigmaIcon asset="bbd93" size={18} />

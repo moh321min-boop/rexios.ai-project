@@ -1,3 +1,5 @@
+import { Notice } from '@/components/shared/Notice'
+import { t, useI18n } from '@/i18n'
 import { useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { problems, type Problem } from '@/data/problems'
@@ -24,6 +26,7 @@ import {
   ProfileLink,
 } from '@/components/problems/ProblemUI'
 export function SubmitSolutionPage() {
+  useI18n()
   const { id } = useParams()
   const problem = problems.find((p) => p.id === id)
   const { user, permissions } = useAuth()
@@ -37,21 +40,21 @@ export function SubmitSolutionPage() {
         <section className="problem-card">
           <h1 className="heading">
             {!user
-              ? 'Sign in to submit a solution'
+              ? t('submitSolution.sign_in_to_submit_a_solution')
               : user.role === 'industrial_company'
-                ? 'Solution submission unavailable'
-                : 'Complete your solver profile'}
+                ? t('submitSolution.solution_submission_unavailable')
+                : t('submitSolution.complete_your_solver_profile')}
           </h1>
           <p>
             {!user
-              ? 'Sign in with a demo solver account to test this workflow.'
+              ? t('submitSolution.sign_in_with_a_demo_solver_account')
               : user.role === 'industrial_company'
-                ? 'Company accounts can participate in discussions. Technical solver accounts submit proposals.'
-                : 'A complete solver profile is required in this preview.'}
+                ? t('submitSolution.company_accounts_can_participate_in_discussions_technical')
+                : t('submitSolution.a_complete_solver_profile_is_required_in')}
           </p>
           {permissions.canEditSolverProfile && <ProfileLink problem={problem} />}
           <Link className="text-link" to={`/problems/${problem.id}`}>
-            Back to problem
+            {t('submitSolution.back_to_problem')}
           </Link>
         </section>
       )}
@@ -59,6 +62,7 @@ export function SubmitSolutionPage() {
   )
 }
 function SolutionForm({ problem }: { problem: Problem }) {
+  useI18n()
   const { user } = useAuth(),
     { drafts, submissions, saveDraft, submit } = useProblems()
   const key = `${user!.id}:${problem.id}`
@@ -66,6 +70,7 @@ function SolutionForm({ problem }: { problem: Problem }) {
     [errors, setErrors] = useState<Record<string, string>>({}),
     [notice, setNotice] = useState(''),
     [banner, setBanner] = useState(true),
+    [showSubmissionNotice, setShowSubmissionNotice] = useState(true),
     [success, setSuccess] = useState(false)
   const picker = useRef<HTMLInputElement>(null),
     submitted = useRef(false),
@@ -82,7 +87,7 @@ function SolutionForm({ problem }: { problem: Problem }) {
     setErrors((e) => ({ ...e, file: error }))
     if (!error) {
       change('file', { name: file.name, size: file.size })
-      setNotice('Selected locally. Only the filename and size are retained; nothing is uploaded.')
+      setNotice('submitSolution.selected_locally_only_the_filename_and_size')
     }
   }
   function send(event: FormEvent) {
@@ -94,7 +99,7 @@ function SolutionForm({ problem }: { problem: Problem }) {
       return
     }
     if (submitted.current || submissions[key]) {
-      setNotice('A local proposal already exists for this problem. Reloading clears the preview.')
+      setNotice('submitSolution.a_local_proposal_already_exists_for_this')
       return
     }
     submitted.current = true
@@ -109,21 +114,18 @@ function SolutionForm({ problem }: { problem: Problem }) {
     <div className="problem-submit-grid">
       <form className="solution-form" noValidate onSubmit={send}>
         <header>
-          <h1 className="heading">Submit your solution</h1>
+          <h1 className="heading">{t('submitSolution.submit_your_solution')}</h1>
           <p className="text-muted">
-            Explain your idea clearly; the company decides whether to accept or reject the solution.
+            {t('submitSolution.explain_your_idea_clearly_the_company_decides')}
           </p>
         </header>
         {banner && (
           <div className="problem-message info">
             <FigmaIcon asset="a424c" size={24} />
-            <p>
-              Your skills match {matched} of the problem's {problem.skills.length} skills — you can
-              continue.
-            </p>
+            <p>{t('solution.match', { matched, total: problem.skills.length })}</p>
             <button
               type="button"
-              aria-label="Dismiss skill match notice"
+              aria-label={t('submitSolution.dismiss_skill_match_notice')}
               onClick={() => setBanner(false)}
             >
               ×
@@ -133,10 +135,10 @@ function SolutionForm({ problem }: { problem: Problem }) {
         <Textarea
           autoGrow
           className="resize-none"
-          label="Solution summary"
+          label={t('submitSolution.solution_summary')}
           required
-          placeholder="Explain your idea, how you'll implement it and the technologies you'll use…"
-          helperText="At least 50 words recommended"
+          placeholder={t('submitSolution.explain_your_idea_how_you_ll_implement')}
+          helperText={t('submitSolution.at_least_50_words_recommended')}
           value={draft.summary}
           onChange={(e) => change('summary', e.target.value)}
           error={errors.summary}
@@ -144,7 +146,7 @@ function SolutionForm({ problem }: { problem: Problem }) {
         />
         <div className="form-row">
           <Select
-            label="Proposed delivery time"
+            label={t('submitSolution.proposed_delivery_time')}
             required
             value={draft.delivery}
             onChange={(e) => change('delivery', e.target.value)}
@@ -152,14 +154,14 @@ function SolutionForm({ problem }: { problem: Problem }) {
           >
             {['10'].map((days) => (
               <option key={days} value={days}>
-                {days} days
+                {t('counts.days', { count: Number(days) })}
               </option>
             ))}
           </Select>
           <Input
-            label="Link to previous work or a demo"
+            label={t('submitSolution.link_to_previous_work_or_a_demo')}
             placeholder="https://github.com/…"
-            helperText="Optional"
+            helperText={t('submitSolution.optional')}
             value={draft.link}
             onChange={(e) => change('link', e.target.value)}
             error={errors.link}
@@ -168,7 +170,7 @@ function SolutionForm({ problem }: { problem: Problem }) {
         </div>
         <div className="solution-upload">
           <span className="label" id="solution-file-label">
-            Attachments (optional)
+            {t('submitSolution.attachments_optional')}
           </span>
           <input
             ref={picker}
@@ -197,22 +199,24 @@ function SolutionForm({ problem }: { problem: Problem }) {
               onClick={() => picker.current?.click()}
             >
               <FigmaIcon asset="bc4f0" size={28} />
-              <span>{draft.file ? draft.file.name : 'Drag the file here or click to choose'}</span>
+              <span>
+                {draft.file ? draft.file.name : t('profileSetup.drag_the_file_here_or_click_to')}
+              </span>
               <span className="caption text-muted">
                 {draft.file
-                  ? `${(draft.file.size / 1000000).toFixed(1)}MB — selected locally. Click to replace.`
-                  : 'PDF or DOCX — up to 5MB'}
+                  ? t('solution.fileSelected', { size: (draft.file.size / 1000000).toFixed(1) })
+                  : t('profileSetup.pdf_or_docx_up_to_5mb')}
               </span>
             </button>
             {draft.file && (
               <button type="button" className="text-link" onClick={() => change('file', null)}>
-                Remove attachment
+                {t('submitSolution.remove_attachment')}
               </button>
             )}
           </div>
           {errors.file && (
             <p className="caption text-error-text" id="solution-file-error">
-              {errors.file}
+              {t(errors.file)}
             </p>
           )}
         </div>
@@ -226,53 +230,49 @@ function SolutionForm({ problem }: { problem: Problem }) {
               aria-invalid={!!errors.terms}
               aria-describedby={errors.terms ? 'solution-terms-error' : undefined}
             />
-            <span>I confirm this work is my own and agree to the solution submission terms</span>
+            <span>{t('submitSolution.i_confirm_this_work_is_my_own')}</span>
           </label>
           {errors.terms && (
             <p className="caption text-error-text" id="solution-terms-error">
-              {errors.terms}
+              {t(errors.terms)}
             </p>
           )}
         </div>
         <hr />
         <div className="solution-actions">
           <Button type="submit" disabled={!!submissions[key]}>
-            Submit solution
+            {t('submitSolution.submit_solution')}
           </Button>
           <Button
             variant="secondary"
             type="button"
             onClick={() => {
               saveDraft(key, draft)
-              setNotice('Draft saved for this tab only. Reloading clears it.')
+              setNotice('submitSolution.draft_saved_for_this_tab_only_reloading')
             }}
           >
-            Save as draft
+            {t('askQuestion.save_as_draft')}
           </Button>
           <Button variant="ghost" type="button" onClick={cancel}>
-            Cancel
+            {t('askQuestion.cancel')}
           </Button>
         </div>
-        {notice && (
-          <p role="status" className="inline-notice">
-            {notice}
-          </p>
-        )}
-        {submissions[key] && !success && (
-          <p role="status" className="inline-notice">
-            A local preview solution has already been submitted. Nothing was sent to a company.
-          </p>
+        {notice && <Notice onDismiss={() => setNotice('')}>{notice}</Notice>}
+        {submissions[key] && !success && showSubmissionNotice && (
+          <Notice onDismiss={() => setShowSubmissionNotice(false)}>
+            {t('submitSolution.a_local_preview_solution_has_already_been')}
+          </Notice>
         )}
       </form>
       <ProblemSummary problem={problem} submission />
       <Modal
         isOpen={success}
         onClose={() => setSuccess(false)}
-        title="Local solution preview saved"
-        description="Nothing was uploaded or sent to a company. This sample submission disappears when the page is reloaded."
+        title={t('submitSolution.local_solution_preview_saved')}
+        description={t('submitSolution.nothing_was_uploaded_or_sent_to_a')}
       >
         <Link className="button-link" to={`/problems/${problem.id}`}>
-          Back to problem
+          {t('submitSolution.back_to_problem')}
         </Link>
       </Modal>
     </div>

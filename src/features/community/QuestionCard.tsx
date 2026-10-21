@@ -1,3 +1,5 @@
+import { t, useI18n } from '@/i18n'
+import { questionText } from '@/i18n/community'
 import { Link } from 'react-router-dom'
 import type { Question } from '@/types'
 import { Avatar } from '@/components/ui/Avatar'
@@ -12,6 +14,7 @@ export function QuestionCard({
   question: Question
   onTagClick?: (tag: string) => void
 }) {
+  useI18n()
   return (
     <article className="question-card">
       <div className="author-row">
@@ -19,14 +22,20 @@ export function QuestionCard({
           <Avatar name={q.author.displayName} size="sm" />
           <span className="label">{q.author.displayName}</span>
         </div>
-        <span className="caption text-muted">{q.timeLabel || formatRelativeTime(q.createdAt)}</span>
+        <span className="caption text-muted">
+          {t(q.timeLabel || formatRelativeTime(q.createdAt))}
+        </span>
       </div>
-      <h2 className="section-title">
+      <h2 className="section-title" dir="auto">
         <Link className="hover:underline" to={`/community/questions/${q.id}`}>
-          {q.title}
+          {questionText(q, 'title')}
         </Link>
       </h2>
-      <p className="text-muted">{q.summary || q.body}</p>
+      <p className="text-muted" dir="auto">
+        {q.id.startsWith('related-')
+          ? t('mockData.the_saved_design_includes_this_question_title')
+          : questionText(q, q.summary ? 'summary' : 'body')}
+      </p>
       <div className="flex flex-wrap gap-2">
         {q.tags.map((tag) => (
           <Tag
@@ -46,7 +55,9 @@ export function QuestionCard({
             to={`/community/questions/${q.id}`}
           >
             <FigmaIcon asset="84216" size={16} />
-            {q.answerCount ? `${q.answerCount} answers` : 'No answers'}
+            {q.answerCount
+              ? t('counts.answers', { count: q.answerCount })
+              : t('questionCard.no_answers')}
           </Link>
           <span className="flex items-center gap-[6px]">
             <FigmaIcon asset="be2c2" size={16} />

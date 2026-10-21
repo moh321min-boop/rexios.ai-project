@@ -3,6 +3,8 @@
 @import './fonts.css';
 @import './application.css';
 @import './problems.css';
+@import './landing.css';
+@import './localization.css';
 @theme {
   --font-sans: 'Cairo', sans-serif;
   --font-brand: 'Pixelify Sans', sans-serif;

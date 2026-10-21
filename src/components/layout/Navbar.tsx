@@ -1,5 +1,6 @@
+import { t, useI18n } from '@/i18n'
 import { startTransition, useEffect, useRef, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { RexiosLogo } from '@/components/shared/RexiosLogo'
 import { LanguageSwitch } from '@/components/shared/LanguageSwitch'
@@ -7,8 +8,10 @@ import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import { FigmaIcon } from '@/components/ui/FigmaIcon'
 import { useAuth } from '@/context/AuthContext'
+import { Notice } from '@/components/shared/Notice'
 
 export function Navbar() {
+  useI18n()
   const { user, isAuthenticated, logout, permissions, sessionNotice } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -47,7 +50,7 @@ export function Navbar() {
   }
   return (
     <header
-      className={`site-navbar ${location.pathname.startsWith('/problems') ? 'problems-navbar' : ''}`}
+      className="site-navbar"
       onKeyDown={(event) => {
         if (event.key === 'Escape' && (open || accountOpen)) {
           event.preventDefault()
@@ -64,7 +67,7 @@ export function Navbar() {
           ref={toggle}
           type="button"
           className="navbar-toggle"
-          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-label={open ? t('navbar.close_navigation_menu') : t('navbar.open_navigation_menu')}
           aria-expanded={open}
           aria-controls="application-navigation"
           onClick={() => {
@@ -75,38 +78,30 @@ export function Navbar() {
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
         <div id="application-navigation" className={`navbar-menu ${open ? 'is-open' : ''}`}>
-          <nav className="navbar-links" aria-label="Main navigation">
-            <Link to="/" onClick={close}>
-              Home
-            </Link>
-            <Link
-              to={'/community'}
-              onClick={close}
-              aria-current={location.pathname.startsWith('/community') ? 'page' : undefined}
-            >
-              Community
-            </Link>
-            <Link
-              to={'/problems'}
-              onClick={close}
-              aria-current={location.pathname.startsWith('/problems') ? 'page' : undefined}
-            >
-              Problems
-            </Link>
+          <nav className="navbar-links" aria-label={t('navbar.main_navigation')}>
+            <NavLink to="/" end onClick={close}>
+              {t('navbar.home')}
+            </NavLink>
+            <NavLink to="/community" onClick={close}>
+              {t('communityFeed.community')}
+            </NavLink>
+            <NavLink to="/problems" onClick={close}>
+              {t('problems.problems')}
+            </NavLink>
             <button type="button" onClick={() => inform('The About page is not implemented yet.')}>
-              About
+              {t('navbar.about')}
             </button>
           </nav>
           <div className="navbar-actions">
             {isAuthenticated ? (
               <>
                 <Button variant="accent" size="sm" onClick={() => go('/community/ask')}>
-                  Ask a question
+                  {t('askQuestion.ask_a_question')}
                 </Button>
                 <button
                   type="button"
                   className="notification-button"
-                  aria-label="Notifications"
+                  aria-label={t('navbar.notifications')}
                   onClick={() => inform('Notifications are not connected in this preview.')}
                 >
                   <FigmaIcon asset="228fd" size={22} />
@@ -116,7 +111,7 @@ export function Navbar() {
                     ref={account}
                     type="button"
                     className="account-toggle"
-                    aria-label="Account menu"
+                    aria-label={t('navbar.account_menu')}
                     aria-expanded={accountOpen}
                     aria-controls="account-links"
                     onClick={() => setAccountRoute(accountOpen ? null : location.key)}
@@ -127,11 +122,13 @@ export function Navbar() {
                     id="account-links"
                     className={`account-links ${accountOpen ? 'is-open' : ''}`}
                   >
-                    <p className="caption text-muted">Demo account · {user?.displayName}</p>
-                    {sessionNotice && <p className="caption text-muted">{sessionNotice}</p>}
+                    <p className="caption text-muted">
+                      {t('navbar.demo_account')} {user?.displayName}
+                    </p>
+                    {sessionNotice && <p className="caption text-muted">{t(sessionNotice)}</p>}
                     {permissions.canEditSolverProfile && (
                       <Link to={'/profile-setup'} onClick={close}>
-                        Solver profile
+                        {t('profileSetup.solver_profile')}
                       </Link>
                     )}
                     <button
@@ -145,7 +142,7 @@ export function Navbar() {
                         })
                       }}
                     >
-                      Sign out
+                      {t('navbar.sign_out')}
                     </button>
                   </div>
                 </div>
@@ -153,10 +150,10 @@ export function Navbar() {
             ) : (
               <>
                 <Button variant="outline" size="sm" onClick={() => go('/signin')}>
-                  Sign in
+                  {t('signIn.sign_in')}
                 </Button>
                 <Button size="sm" onClick={() => go('/signup')}>
-                  Sign up
+                  {t('signUp.sign_up')}
                 </Button>
               </>
             )}
@@ -165,12 +162,9 @@ export function Navbar() {
         </div>
       </div>
       {notice && (
-        <div role="status" className="navbar-notice">
+        <Notice className="navbar-notice" onDismiss={() => setNotice('')}>
           {notice}
-          <button type="button" aria-label="Dismiss notification" onClick={() => setNotice('')}>
-            ×
-          </button>
-        </div>
+        </Notice>
       )}
     </header>
   )

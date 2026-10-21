@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 export function RexiosLogo({
@@ -8,10 +9,12 @@ export function RexiosLogo({
   size?: 'sm' | 'md' | 'lg'
   className?: string
 }) {
+  useI18n()
   return (
     <Link
       to="/"
-      aria-label="Rexios AI home"
+      dir="ltr"
+      aria-label={t('rexiosLogo.rexios_ai_home')}
       className={cn(
         'inline-flex shrink-0 items-center gap-3 rounded-[4px] px-4 py-3',
         variant === 'light' ? 'bg-primary text-surface' : 'text-ink',

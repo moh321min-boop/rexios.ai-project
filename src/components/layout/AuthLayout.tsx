@@ -1,11 +1,13 @@
+import { t, useI18n } from '@/i18n'
 import type { ReactNode } from 'react'
 import { RexiosLogo } from '@/components/shared/RexiosLogo'
 import { LanguageSwitch } from '@/components/shared/LanguageSwitch'
 import { authArtwork } from '@/data/authArtwork'
 export function AuthLayout({ children, mode }: { children: ReactNode; mode: 'signup' | 'signin' }) {
+  useI18n()
   return (
     <main className="auth-layout">
-      <aside className="auth-art" aria-label="Rexios AI community">
+      <aside className="auth-art" aria-label={t('authLayout.rexios_ai_community')}>
         <div className="auth-pixels" aria-hidden="true">
           {authArtwork[mode].map(([x, y, size, lime], i) => (
             <span
@@ -27,7 +29,7 @@ export function AuthLayout({ children, mode }: { children: ReactNode; mode: 'sig
         <div className="auth-illustration">
           <img
             src="/figma/e5844.svg"
-            alt="Rexios AI pixel dinosaur"
+            alt={t('authLayout.rexios_ai_pixel_dinosaur')}
             width="360"
             height="270"
             className="auth-mascot"
@@ -36,13 +38,16 @@ export function AuthLayout({ children, mode }: { children: ReactNode; mode: 'sig
         <div className="auth-panel-copy">
           <h2 className="heading">
             {mode === 'signup'
-              ? 'Join the community of technologists'
-              : 'Welcome back to the community'}
+              ? t('authLayout.join_the_community_of_technologists')
+              : t('authLayout.welcome_back_to_the_community')}
           </h2>
-          <p>Ask, answer and learn from real problems your peers face.</p>
+          <p>{t('authLayout.ask_answer_and_learn_from_real_problems')}</p>
         </div>
       </aside>
-      <section className="auth-form-area" aria-label={mode === 'signup' ? 'Sign up' : 'Sign in'}>
+      <section
+        className="auth-form-area"
+        aria-label={mode === 'signup' ? t('signUp.sign_up') : t('signIn.sign_in')}
+      >
         <div className="auth-language">
           <LanguageSwitch />
         </div>

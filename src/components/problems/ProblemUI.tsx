@@ -1,3 +1,4 @@
+import { t, useI18n, formatNumber } from '@/i18n'
 import { Link } from 'react-router-dom'
 import { BadgeCheck, CircleDollarSign, Clock3, Users, CircleCheck } from 'lucide-react'
 import type { Problem, Difficulty } from '@/data/problems'
@@ -9,9 +10,10 @@ import { normalizeSkill } from '@/lib/problems'
 import { problemPermission } from '@/lib/auth/permissions'
 
 export function DifficultyMark({ value }: { value: Difficulty }) {
+  useI18n()
   return (
     <span className="problem-difficulty">
-      {value}
+      {t(value)}
       <span aria-hidden="true" className={`difficulty-bars difficulty-${value.toLowerCase()}`}>
         <i />
         <i />
@@ -29,6 +31,7 @@ export function ProblemSkills({
   matched?: string[]
   all?: boolean
 }) {
+  useI18n()
   return (
     <div className="problem-skills">
       {problem.skills.map((skill) => (
@@ -43,47 +46,58 @@ export function ProblemSkills({
   )
 }
 export function Company({ problem, large = false }: { problem: Problem; large?: boolean }) {
+  useI18n()
   return (
     <div className="problem-company">
       <Avatar name={problem.initial} size={large ? 'md' : 'sm'} />
-      <span>{problem.company}</span>
-      <BadgeCheck size={16} color="#16ad63" aria-label="Verified company in design fixture" />
+      <bdi>{problem.company}</bdi>
+      <BadgeCheck
+        size={16}
+        color="#16ad63"
+        aria-label={t('problemUI.verified_company_in_design_fixture')}
+      />
     </div>
   )
 }
 export function Reward({ value, small = false }: { value: number; small?: boolean }) {
+  useI18n()
   return (
     <div className={small ? 'problem-reward-small' : 'problem-reward'}>
       {small ? (
         <CircleDollarSign size={18} aria-hidden="true" />
       ) : (
-        <span className="caption">Reward</span>
+        <span className="caption">{t('problemUI.reward')}</span>
       )}
-      <strong>{value.toLocaleString('en-US')} DZD</strong>
+      <strong>
+        {formatNumber(value)} {t('problems.dzd')}
+      </strong>
     </div>
   )
 }
 export function ProblemCard({ problem }: { problem: Problem }) {
+  useI18n()
   return (
     <article className="problem-card">
       <div className="problem-card-top">
         <Company problem={problem} />
-        <span className="caption text-muted">{problem.age}</span>
+        <span className="caption text-muted">{t(problem.age)}</span>
       </div>
-      <h2 className="section-title">
-        <Link to={`/problems/${problem.id}`}>{problem.title}</Link>
+      <h2 className="section-title" dir="auto">
+        <Link to={`/problems/${problem.id}`}>{t(problem.title)}</Link>
       </h2>
-      <p className="text-muted">{problem.summary}</p>
+      <p className="text-muted" dir="auto">
+        {t(problem.summary)}
+      </p>
       <ProblemSkills problem={problem} />
       <div className="problem-card-footer">
         <DifficultyMark value={problem.difficulty} />
         <span>
           <Clock3 size={16} aria-hidden="true" />
-          Ends in {problem.days} days
+          {t('problem.endsIn', { duration: t('counts.days', { count: problem.days }) })}
         </span>
         <span>
           <Users size={16} aria-hidden="true" />
-          {problem.proposals} proposals
+          {t('counts.proposals', { count: problem.proposals })}
         </span>
         <Reward value={problem.reward} small />
       </div>
@@ -97,38 +111,42 @@ export function ProblemBreadcrumb({
   problem?: Problem
   submit?: boolean
 }) {
+  useI18n()
   return (
-    <nav className="problem-breadcrumb" aria-label="Breadcrumb">
-      <Link to={'/problems'}>Problems</Link>
+    <nav className="problem-breadcrumb" aria-label={t('questionDetail.breadcrumb')}>
+      <Link to={'/problems'}>{t('problems.problems')}</Link>
       {problem && (
         <>
           <FigmaIcon asset="60b9b" size={16} />
           {submit ? (
-            <Link className="truncate" to={`/problems/${problem.id}`}>
-              {problem.title}
+            <Link className="truncate" dir="auto" to={`/problems/${problem.id}`}>
+              {t(problem.title)}
             </Link>
           ) : (
-            <span className="truncate">{problem.title}</span>
+            <span className="truncate" dir="auto">
+              {t(problem.title)}
+            </span>
           )}
         </>
       )}
       {submit && (
         <>
           <FigmaIcon asset="60b9b" size={16} />
-          <span>Submit a solution</span>
+          <span>{t('problemUI.submit_a_solution')}</span>
         </>
       )}
     </nav>
   )
 }
 export function ProfileLink({ problem }: { problem: Problem }) {
+  useI18n()
   const path = '/profile-setup'
   return (
     <Link
       className="button-link"
       to={`${path}${path.includes('?') ? '&' : '?'}returnTo=${encodeURIComponent(`/problems/${problem.id}`)}`}
     >
-      Complete solver profile
+      {t('problemUI.complete_solver_profile')}
     </Link>
   )
 }
@@ -139,6 +157,7 @@ export function ProblemSummary({
   problem: Problem
   submission?: boolean
 }) {
+  useI18n()
   const { user } = useAuth()
   const access = problemPermission(user, problem)
   const solverProfileComplete = access.canSubmitSolutions,
@@ -148,33 +167,35 @@ export function ProblemSummary({
     <aside className={`problem-summary ${submission ? 'submission-summary' : ''}`}>
       {submission && (
         <>
-          <p className="caption text-muted">Problem</p>
-          <h2 className="section-title">{problem.title}</h2>
+          <p className="caption text-muted">{t('problemUI.problem')}</p>
+          <h2 className="section-title" dir="auto">
+            {t(problem.title)}
+          </h2>
         </>
       )}
       <Reward value={problem.reward} />
       <dl className="problem-facts">
         <div>
-          <dt>Difficulty</dt>
+          <dt>{t('problems.difficulty')}</dt>
           <dd>
             <DifficultyMark value={problem.difficulty} />
           </dd>
         </div>
         <div>
-          <dt>Deadline</dt>
-          <dd>{problem.days} days</dd>
+          <dt>{t('problemUI.deadline')}</dt>
+          <dd>{t('counts.days', { count: problem.days })}</dd>
         </div>
         {!submission && (
           <div>
-            <dt>Proposals</dt>
-            <dd>{problem.proposals}</dd>
+            <dt>{t('problemUI.proposals_2')}</dt>
+            <dd>{formatNumber(problem.proposals)}</dd>
           </div>
         )}
       </dl>
       {!submission && (
         <>
           <hr />
-          <p className="label">Required skills</p>
+          <p className="label">{t('problemUI.required_skills')}</p>
         </>
       )}
       <ProblemSkills
@@ -183,54 +204,48 @@ export function ProblemSummary({
         all={submission}
       />
       {submission ? (
-        <div className="problem-message">
-          Your solver profile will be sent to the company with this proposal for evaluation.
-        </div>
+        <div className="problem-message">{t('problemUI.your_solver_profile_will_be_sent_to')}</div>
       ) : access.state === 'company' ? (
         <p className="problem-message">
-          Company accounts can discuss problems. Solution submission is available to technical
-          solvers.
+          {t('problemUI.company_accounts_can_discuss_problems_solution_submission')}
         </p>
       ) : solverProfileComplete ? (
         <>
           <p className="caption problem-match">
-            Your skills match {matched.length} of {problem.skills.length}
+            {t('problem.match', { matched: matched.length, total: problem.skills.length })}
           </p>
           <div className="problem-message success">
             <CircleCheck size={20} aria-hidden="true" />
             <p>
               {problem.id === 'p-101' && matched.length >= 2
-                ? "Your skills match this problem's requirements. You can submit your solution now."
-                : 'Solver demo: you can preview a proposal. Production eligibility rules are not connected.'}
+                ? t('problemUI.your_skills_match_this_problem_s_requirements')
+                : t('problemUI.solver_demo_you_can_preview_a_proposal')}
             </p>
           </div>
           <Link
             className="button-link problem-accent"
             to={`/problems/${problem.id}/submit-solution`}
           >
-            Submit a solution
+            {t('problemUI.submit_a_solution')}
           </Link>
         </>
       ) : (
         <>
           <div>
             <div className="problem-progress-label">
-              <span>Solver profile completeness</span>
+              <span>{t('profileSetup.solver_profile_completeness')}</span>
               <span>{user?.solverProfile.completeness ?? 0}%</span>
             </div>
             <progress
               className="profile-progress"
-              aria-label="Solver profile completeness"
+              aria-label={t('profileSetup.solver_profile_completeness')}
               max={100}
               value={user?.solverProfile.completeness ?? 0}
             />
           </div>
           <div className="problem-message warning">
             <FigmaIcon asset="0aee9" size={20} />
-            <p>
-              Complete your solver profile (education, skills, CV) so the problem owner can evaluate
-              your proposal.
-            </p>
+            <p>{t('problemUI.complete_your_solver_profile_education_skills_cv')}</p>
           </div>
           <ProfileLink problem={problem} />
         </>
@@ -239,12 +254,13 @@ export function ProblemSummary({
   )
 }
 export function ProblemNotFound() {
+  useI18n()
   return (
     <div className="problems-page">
-      <h1 className="heading">Problem not found</h1>
-      <p>This problem is not included in the local preview.</p>
+      <h1 className="heading">{t('problemUI.problem_not_found')}</h1>
+      <p>{t('problemUI.this_problem_is_not_included_in_the')}</p>
       <Link className="text-link" to={'/problems'}>
-        Back to problems
+        {t('problemUI.back_to_problems')}
       </Link>
     </div>
   )

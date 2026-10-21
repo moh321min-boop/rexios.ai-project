@@ -21,13 +21,16 @@ export function filterProblems(
   skills: string[],
   min: number,
   max: number,
-  sort: string
+  sort: string,
+  localizedSearchText: (problem: Problem) => string = () => ''
 ) {
   const words = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
   const found = items.filter(
     (p) =>
       words.every((w) =>
-        `${p.title} ${p.company} ${p.summary} ${p.skills.join(' ')}`.toLowerCase().includes(w)
+        `${p.title} ${p.company} ${p.summary} ${p.skills.join(' ')} ${localizedSearchText(p)}`
+          .toLowerCase()
+          .includes(w)
       ) &&
       (!difficulties.length || difficulties.includes(p.difficulty)) &&
       (!skills.length ||

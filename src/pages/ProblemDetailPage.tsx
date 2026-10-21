@@ -1,7 +1,10 @@
+import { Notice } from '@/components/shared/Notice'
+import { t, useI18n } from '@/i18n'
 import { useRef, useState, type FormEvent } from 'react'
 import { useParams } from 'react-router-dom'
 import { Reply } from 'lucide-react'
-import { problems, type Problem } from '@/data/problems'
+import { problems, initialProblemComments, type Problem } from '@/data/problems'
+import { fixtureText } from '@/i18n/fixtures'
 import { useProblems } from '@/context/ProblemsContext'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/Button'
@@ -18,6 +21,7 @@ import {
   ProblemSummary,
 } from '@/components/problems/ProblemUI'
 function Discussion({ problem }: { problem: Problem }) {
+  useI18n()
   const { comments, addComment } = useProblems(),
     { user, triggerAuthPrompt } = useAuth()
   const entries = comments[problem.id] ?? []
@@ -32,7 +36,7 @@ function Discussion({ problem }: { problem: Problem }) {
       return
     }
     if (!text.trim()) {
-      setError('Write a comment or question.')
+      setError('problemDetail.write_a_comment_or_question')
       input.current?.focus()
       return
     }
@@ -52,19 +56,16 @@ function Discussion({ problem }: { problem: Problem }) {
     <section className="problem-discussion">
       <div>
         <h2>
-          Discussion <span>({entries.length})</span>
+          {t('problemDetail.discussion')} <span>({entries.length})</span>
         </h2>
-        <p className="text-muted">
-          Ask the problem owner or the community. Commenting is open to all members with just an
-          email.
-        </p>
+        <p className="text-muted">{t('problemDetail.ask_the_problem_owner_or_the_community')}</p>
       </div>
       <form className="problem-comment-form" noValidate onSubmit={post}>
         {reply && (
           <p className="caption">
-            Replying to {reply.author}{' '}
+            {t('problem.replyingTo', { name: reply.author })}{' '}
             <button type="button" className="text-link" onClick={() => setReply(null)}>
-              Cancel reply
+              {t('problemDetail.cancel_reply')}
             </button>
           </p>
         )}
@@ -72,15 +73,15 @@ function Discussion({ problem }: { problem: Problem }) {
           autoGrow
           className="resize-none"
           ref={input}
-          label="Add a comment or question"
-          placeholder="Ask about the company or the problem details…"
+          label={t('problemDetail.add_a_comment_or_question')}
+          placeholder={t('problemDetail.ask_about_the_company_or_the_problem')}
           value={text}
           onChange={(e) => setText(e.target.value)}
           error={error}
           maxLength={10000}
         />
         <Button size="sm" type="submit">
-          Post comment
+          {t('problemDetail.post_comment')}
         </Button>
       </form>
       {entries.map((comment) => (
@@ -91,26 +92,34 @@ function Discussion({ problem }: { problem: Problem }) {
           <div className="problem-card-top">
             <div className="problem-company">
               <Avatar size="sm" name={comment.author} />
-              <span>{comment.author}</span>
+              <bdi>{comment.author}</bdi>
               {comment.company && (
                 <span className="problem-skills">
-                  <Tag name="COMPANY" selected />
+                  <Tag name={t('roles.companyBadge')} selected />
                 </span>
               )}
             </div>
-            <span className="caption text-muted">{comment.time}</span>
+            <span className="caption text-muted">{t(comment.time)}</span>
           </div>
-          <p>{comment.text}</p>
+          <p dir="auto">
+            {fixtureText(
+              comment.text,
+              problem.id === 'p-101'
+                ? initialProblemComments.find((item) => item.id === comment.id)?.text
+                : undefined
+            )}
+          </p>
           <button
             type="button"
             className="problem-reply"
+            aria-label={t('problem.replyTo', { name: comment.author })}
             onClick={() => {
               setReply({ id: comment.id, author: comment.author })
               input.current?.focus()
             }}
           >
             <Reply size={16} aria-hidden="true" />
-            Reply<span className="sr-only"> to {comment.author}</span>
+            {t('problemDetail.reply')}
           </button>
         </article>
       ))}
@@ -118,11 +127,13 @@ function Discussion({ problem }: { problem: Problem }) {
   )
 }
 export function ProblemDetailPage() {
+  useI18n()
   const { id } = useParams()
   const problem = problems.find((p) => p.id === id)
   return problem ? <Detail key={problem.id} problem={problem} /> : <ProblemNotFound />
 }
 function Detail({ problem }: { problem: Problem }) {
+  useI18n()
   const [notice, setNotice] = useState('')
   return (
     <div className="problems-page">
@@ -132,9 +143,13 @@ function Detail({ problem }: { problem: Problem }) {
           <section className="problem-title-card">
             <div className="problem-card-top">
               <Company problem={problem} large />
-              <span className="caption text-muted">Posted {problem.age}</span>
+              <span className="caption text-muted">
+                {t('problem.posted', { time: t(problem.age) })}
+              </span>
             </div>
-            <h1 className="heading">{problem.title}</h1>
+            <h1 className="heading" dir="auto">
+              {t(problem.title)}
+            </h1>
             <div className="problem-title-tags">
               <DifficultyMark value={problem.difficulty} />
               <ProblemSkills problem={problem} />
@@ -142,23 +157,22 @@ function Detail({ problem }: { problem: Problem }) {
           </section>
           <section className="problem-description">
             <div>
-              <h2 className="section-title">Problem description</h2>
-              <p>{problem.description ?? problem.summary}</p>
+              <h2 className="section-title">{t('problemDetail.problem_description')}</h2>
+              <p dir="auto">{t(problem.description ?? problem.summary)}</p>
               {!problem.description && (
                 <p className="inline-notice">
-                  Detailed requirements and attachments for this problem were not supplied. This
-                  preview uses only the list reference.
+                  {t('problemDetail.detailed_requirements_and_attachments_for_this_problem')}
                 </p>
               )}
             </div>
             {problem.sections?.map((section) => (
               <div key={section.title}>
-                <h2 className="section-title">{section.title}</h2>
+                <h2 className="section-title">{t(section.title)}</h2>
                 <ul>
                   {section.items.map((item) => (
                     <li key={item}>
                       <FigmaIcon asset="3d3b0" size={20} />
-                      <span>{item}</span>
+                      <span dir="auto">{t(item)}</span>
                     </li>
                   ))}
                 </ul>
@@ -166,18 +180,14 @@ function Detail({ problem }: { problem: Problem }) {
             ))}
             {problem.attachments && (
               <div>
-                <h2 className="section-title">Attachments</h2>
+                <h2 className="section-title">{t('problemDetail.attachments')}</h2>
                 <div className="problem-attachments">
                   {problem.attachments.map((name) => (
                     <Button
                       size="sm"
                       variant="secondary"
                       key={name}
-                      onClick={() =>
-                        setNotice(
-                          `${name} is shown in the design, but the original file was not supplied. No download is available.`
-                        )
-                      }
+                      onClick={() => setNotice(name)}
                     >
                       <FigmaIcon asset="2c98d" size={18} />
                       {name}
@@ -185,9 +195,9 @@ function Detail({ problem }: { problem: Problem }) {
                   ))}
                 </div>
                 {notice && (
-                  <p role="status" className="inline-notice">
-                    {notice}
-                  </p>
+                  <Notice onDismiss={() => setNotice('')}>
+                    {t('problem.attachmentUnavailable', { name: notice })}
+                  </Notice>
                 )}
               </div>
             )}

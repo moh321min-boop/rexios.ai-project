@@ -1,9 +1,11 @@
+import { t, useI18n } from '@/i18n'
 import { Link, useNavigate } from 'react-router-dom'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { Button } from '@/components/ui/Button'
 import { FigmaIcon } from '@/components/ui/FigmaIcon'
 import { useAuth } from '@/context/AuthContext'
 export function AccountActivatedPage() {
+  useI18n()
   const navigate = useNavigate()
   const { user, sessionNotice } = useAuth()
   return (
@@ -13,47 +15,51 @@ export function AccountActivatedPage() {
           <div className="welcome-mascot">
             <img src="/figma/ffcb3.svg" width={132} height={99} alt="Rexios AI" />
           </div>
-          <h1 className="heading text-center">Your account is created!</h1>
+          <h1 className="heading text-center">{t('accountActivated.your_account_is_created')}</h1>
           <p className="text-muted text-center text-[18px] leading-[1.6]">
-            You can now ask questions, comment and discuss problems with the community.
+            {t('accountActivated.you_can_now_ask_questions_comment_and')}
           </p>
           <div className="welcome-tiers">
             <div className="welcome-tier">
-              <h2 className="text-[15px] leading-[1.4] font-semibold">Member (your account now)</h2>
+              <h2 className="text-[15px] leading-[1.4] font-semibold">
+                {t('accountActivated.member_your_account_now')}
+              </h2>
               {['Ask and answer questions', 'Comment on problems'].map((text) => (
                 <p key={text}>
                   <FigmaIcon asset="311b1" size={18} />
-                  {text}
+                  {t(text)}
                 </p>
               ))}
             </div>
             <div className="welcome-tier bg-sunken">
-              <h2 className="text-[15px] leading-[1.4] font-semibold">Solver (full profile)</h2>
+              <h2 className="text-[15px] leading-[1.4] font-semibold">
+                {t('accountActivated.solver_full_profile')}
+              </h2>
               {['Submit solutions to paid problems', 'Skill-match indicator'].map((text) => (
                 <p key={text} className="text-muted">
                   <FigmaIcon asset="81ac7" size={18} />
-                  {text}
+                  {t(text)}
                 </p>
               ))}
             </div>
           </div>
           <div className="welcome-actions">
             <Link className="button-link" to={'/community'}>
-              Explore the community
+              {t('accountActivated.explore_the_community')}
             </Link>
             <Button variant="secondary" onClick={() => navigate('/problems')}>
-              Browse problems
+              {t('accountActivated.browse_problems')}
             </Button>
             <Link className="text-link px-6 py-[10px]" to={'/profile-setup'}>
-              Complete solver profile now
+              {t('accountActivated.complete_solver_profile_now')}
             </Link>
           </div>
         </section>
         <p className="caption text-muted mt-6 text-center">
-          {sessionNotice ||
+          {t(sessionNotice) ||
             (user?.temporary
-              ? 'Temporary demo account — lost on reload. No server account was created.'
-              : 'Demo account only — no real account has been created or activated.')}
+              ? t('accountActivated.temporary_demo_account_lost_on_reload_no')
+              : t('accountActivated.demo_account_only_no_real_account_has'))}
         </p>
       </div>
     </PageLayout>

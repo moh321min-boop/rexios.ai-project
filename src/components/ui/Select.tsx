@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { useId, type SelectHTMLAttributes, type ReactNode } from 'react'
 import { FigmaIcon } from './FigmaIcon'
 // Saved frames specify the closed control; its popup is deliberately OS-owned.
@@ -13,12 +14,13 @@ export function Select({
   error?: string
   children: ReactNode
 }) {
+  useI18n()
   const generated = useId()
   const fieldId = id || generated
   return (
     <div className="flex min-w-0 flex-col gap-[6px]">
       <label className="label" htmlFor={fieldId}>
-        {label}
+        {t(label)}
         {required && ' *'}
       </label>
       <div className="relative">
@@ -38,7 +40,7 @@ export function Select({
       </div>
       {error && (
         <p id={fieldId + '-error'} className="caption text-error-text">
-          {error}
+          {t(error)}
         </p>
       )}
     </div>

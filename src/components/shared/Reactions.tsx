@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { useAuth } from '@/context/AuthContext'
 import { useCommunity } from '@/context/CommunityContext'
 import { FigmaIcon } from '@/components/ui/FigmaIcon'
@@ -10,6 +11,7 @@ export function Reactions({
   helpful: number
   insight: number
 }) {
+  useI18n()
   const { isAuthenticated, triggerAuthPrompt } = useAuth()
   const { reactions, toggleReaction } = useCommunity()
   return (
@@ -25,12 +27,12 @@ export function Reactions({
             type="button"
             key={key}
             aria-pressed={active}
-            aria-label={`${item.name} ${item.count + (active ? 1 : 0)}`}
+            aria-label={`${t(item.name)} ${item.count + (active ? 1 : 0)}`}
             className={`reaction ${active ? 'reaction-active' : ''}`}
             onClick={() => (isAuthenticated ? toggleReaction(key) : triggerAuthPrompt())}
           >
             <FigmaIcon asset={item.asset} size={18} />
-            <span>{item.name}</span>
+            <span>{t(item.name)}</span>
             <span>{item.count + (active ? 1 : 0)}</span>
           </button>
         )

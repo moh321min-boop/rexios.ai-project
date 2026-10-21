@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { useEffect, useId, useRef, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { FigmaIcon } from './FigmaIcon'
@@ -20,6 +21,7 @@ export function Modal({
   className,
   showCloseButton = true,
 }: ModalProps) {
+  useI18n()
   const ref = useRef<HTMLDialogElement>(null)
   const id = useId()
   useEffect(() => {
@@ -40,7 +42,7 @@ export function Modal({
       ref={ref}
       className={cn('app-dialog', className)}
       aria-labelledby={title ? `${id}-title` : undefined}
-      aria-label={title ? undefined : 'Dialog'}
+      aria-label={title ? undefined : t('modal.dialog')}
       aria-describedby={description ? `${id}-description` : undefined}
       onKeyDown={(event) => {
         if (event.key !== 'Tab') return
@@ -70,7 +72,7 @@ export function Modal({
             type="button"
             className="dialog-close"
             onClick={onClose}
-            aria-label="Close dialog"
+            aria-label={t('modal.close_dialog')}
           >
             <FigmaIcon asset="08e51" size={20} />
           </button>
@@ -78,10 +80,14 @@ export function Modal({
       )}
       {title && (
         <h2 id={`${id}-title`} className="dialog-title">
-          {title}
+          {typeof title === 'string' ? t(title) : title}
         </h2>
       )}
-      {description && <p id={`${id}-description`}>{description}</p>}
+      {description && (
+        <p id={`${id}-description`}>
+          {typeof description === 'string' ? t(description) : description}
+        </p>
+      )}
       {children}
     </dialog>
   )

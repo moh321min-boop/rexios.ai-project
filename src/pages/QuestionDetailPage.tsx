@@ -1,3 +1,5 @@
+import { t, useI18n } from '@/i18n'
+import { questionText } from '@/i18n/community'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Chip } from '@/components/ui/Chip'
 import { useCommunity } from '@/context/CommunityContext'
@@ -11,6 +13,7 @@ import { AnswerInputForm } from '@/features/questions/AnswerInputForm'
 import { RELATED_QUESTIONS } from '@/data/mockData'
 import { formatRelativeTime } from '@/lib/utils'
 export function QuestionDetailPage() {
+  useI18n()
   const { id } = useParams()
   const [params, setParams] = useSearchParams()
   const sort = params.get('answers') || 'helpful'
@@ -20,10 +23,10 @@ export function QuestionDetailPage() {
     return (
       <section className="app-content">
         <div className="widget">
-          <h1 className="heading">Question not found</h1>
-          <p>This question is unavailable in the current preview session.</p>
+          <h1 className="heading">{t('questionDetail.question_not_found')}</h1>
+          <p>{t('questionDetail.this_question_is_unavailable_in_the_current')}</p>
           <Link className="text-link" to={'/community'}>
-            Back to community
+            {t('questionDetail.back_to_community')}
           </Link>
         </div>
       </section>
@@ -36,13 +39,13 @@ export function QuestionDetailPage() {
   const time = question.timeLabel || formatRelativeTime(question.createdAt)
   return (
     <div className="question-content">
-      <nav aria-label="Breadcrumb" className="question-breadcrumb">
+      <nav aria-label={t('questionDetail.breadcrumb')} className="question-breadcrumb">
         <Link className="text-link" to={'/community'}>
-          Community
+          {t('communityFeed.community')}
         </Link>
         <FigmaIcon asset="60b9b" size={16} />
-        <span aria-current="page" title={question.title}>
-          {question.title}
+        <span aria-current="page" dir="auto" title={questionText(question, 'title')}>
+          {questionText(question, 'title')}
         </span>
       </nav>
       <div className="question-columns">
@@ -54,16 +57,24 @@ export function QuestionDetailPage() {
                 <div>
                   <p className="label">{question.author.displayName}</p>
                   {question.authorRole && (
-                    <p className="caption text-muted">{question.authorRole}</p>
+                    <p className="caption text-muted">{questionText(question, 'authorRole')}</p>
                   )}
                 </div>
               </div>
               <p className="caption text-muted">
-                {time} · {question.viewCount} views
+                {t(time)} · {t('counts.views', { count: question.viewCount })}
               </p>
             </div>
-            <h1 className="heading">{question.title}</h1>
-            <FormattedText text={question.body} />
+            <h1 className="heading" dir="auto">
+              {questionText(question, 'title')}
+            </h1>
+            <FormattedText
+              text={
+                question.id.startsWith('related-')
+                  ? t('mockData.the_saved_design_includes_this_question_title')
+                  : questionText(question, 'body')
+              }
+            />
             {question.code && (
               <pre className="code-block">
                 <code>{question.code}</code>
@@ -88,7 +99,7 @@ export function QuestionDetailPage() {
           <section aria-labelledby="answers-heading" className="answers-section">
             <div className="answers-header">
               <h2 id="answers-heading" className="answers-heading">
-                {question.answerCount} {question.answerCount === 1 ? 'answer' : 'answers'}
+                {t('counts.answers', { count: question.answerCount })}
               </h2>
               <div className="flex flex-wrap gap-2">
                 {(
@@ -106,7 +117,7 @@ export function QuestionDetailPage() {
                       setParams(next)
                     }}
                   >
-                    {label}
+                    {t(label)}
                   </Chip>
                 ))}
               </div>
@@ -116,35 +127,38 @@ export function QuestionDetailPage() {
             ))}
             {list.length < question.answerCount && (
               <p className="caption text-muted">
-                Only the answers included in the saved design are available in this preview.
+                {t('questionDetail.only_the_answers_included_in_the_saved')}
               </p>
             )}
             {!question.answerCount && (
-              <p className="text-muted">No answers yet. Be the first to help.</p>
+              <p className="text-muted">{t('questionDetail.no_answers_yet_be_the_first_to')}</p>
             )}
           </section>
           <AnswerInputForm key={question.id} questionId={question.id} />
           <p className="caption text-muted">
-            Sample discussion. New answers and reactions are local to this preview and are not sent
-            to a server.
+            {t('questionDetail.sample_discussion_new_answers_and_reactions_are')}
           </p>
         </div>
         <aside className="question-side">
           <section className="widget">
-            <h2 className="section-title">Related questions</h2>
+            <h2 className="section-title">{t('questionDetail.related_questions')}</h2>
             {RELATED_QUESTIONS.filter((item) => item.id !== question.id).map((item) => (
               <Link
                 key={item.id}
                 className="related-question"
                 to={`/community/questions/${item.id}`}
               >
-                <span className="label">{item.title}</span>
-                <span className="caption text-muted">{item.answerCount} answers</span>
+                <span className="label" dir="auto">
+                  {questionText(item, 'title')}
+                </span>
+                <span className="caption text-muted">
+                  {t('counts.answers', { count: item.answerCount })}
+                </span>
               </Link>
             ))}
           </section>
           <section className="widget">
-            <h2 className="section-title">Question stats</h2>
+            <h2 className="section-title">{t('questionDetail.question_stats')}</h2>
             <dl className="question-stats">
               {[
                 ['Views', question.viewCount],
@@ -152,8 +166,8 @@ export function QuestionDetailPage() {
                 ['Asked', time],
               ].map(([label, value]) => (
                 <div key={label}>
-                  <dt>{label}</dt>
-                  <dd>{value}</dd>
+                  <dt>{t(label)}</dt>
+                  <dd>{t(value)}</dd>
                 </div>
               ))}
             </dl>

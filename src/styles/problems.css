@@ -56,7 +56,7 @@
   color: #16ad63;
 }
 .problem-message button {
-  margin-left: auto;
+  margin-inline-start: auto;
   flex-shrink: 0;
   color: var(--color-muted);
   font-size: 24px;
@@ -303,7 +303,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-left: auto;
+  margin-inline-start: auto;
   padding: 6px 12px;
   border: 2px solid var(--color-ink);
   border-radius: 4px;
@@ -518,7 +518,7 @@
   resize: none;
 }
 .problem-comment.is-reply {
-  margin-left: 48px;
+  margin-inline-start: 48px;
 }
 .problem-comment.company-comment {
   border-color: var(--color-primary);
@@ -598,11 +598,6 @@
 .submission-summary .problem-message {
   font-size: 14px;
 }
-@media (min-width: 1280px) {
-  .problems-navbar .navbar-links {
-    gap: 32px;
-  }
-}
 @media (max-width: 1279px) {
   .problem-submit-page {
     padding-inline: 48px;
@@ -621,7 +616,7 @@
     gap: 12px;
   }
   .problem-reward-small {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
   .problems-list-grid {
     grid-template-columns: 240px minmax(0, 1fr);
@@ -743,7 +738,7 @@
     padding: 16px;
   }
   .problem-comment.is-reply {
-    margin-left: 16px;
+    margin-inline-start: 16px;
   }
   .problem-company {
     flex-wrap: wrap;
@@ -752,7 +747,7 @@
     gap: 12px;
   }
   .problem-reward-small {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
   .problem-skills {
     gap: 6px;

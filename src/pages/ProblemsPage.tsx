@@ -1,3 +1,5 @@
+import { t, useI18n, formatNumber } from '@/i18n'
+import { Notice } from '@/components/shared/Notice'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
@@ -9,6 +11,7 @@ import { Chip } from '@/components/ui/Chip'
 import { FigmaIcon } from '@/components/ui/FigmaIcon'
 import { DifficultyMark, ProblemCard, ProfileLink } from '@/components/problems/ProblemUI'
 export function ProblemsPage() {
+  useI18n()
   const { user, permissions } = useAuth()
   const [params, setParams] = useSearchParams()
   const [banner, setBanner] = useState(true)
@@ -24,7 +27,16 @@ export function ProblemsPage() {
   }
   const min = bound('min', 10000),
     max = Math.max(min, bound('max', 200000))
-  const found = filterProblems(problems, query, difficulty, skills, min, max, sort)
+  const found = filterProblems(
+    problems,
+    query,
+    difficulty,
+    skills,
+    min,
+    max,
+    sort,
+    (problem) => `${t(problem.title)} ${t(problem.summary)}`
+  )
   function update(key: string, value: string) {
     setParams(
       (prev) => {
@@ -56,22 +68,19 @@ export function ProblemsPage() {
   return (
     <div className="problems-page">
       <header>
-        <h1 className="heading">Problems</h1>
+        <h1 className="heading">{t('problems.problems')}</h1>
         <p className="problem-subtitle">
-          Real problems from Algerian companies — solve them and earn the reward.
+          {t('problems.real_problems_from_algerian_companies_solve_them')}
         </p>
       </header>
       {banner && !permissions.canSubmitSolutions && user?.role !== 'industrial_company' && (
         <div className="problems-banner">
           <div className="problem-message warning">
             <FigmaIcon asset="0aee9" size={24} />
-            <p>
-              You can browse and discuss problems now. To submit a solution, complete your solver
-              profile.
-            </p>
+            <p>{t('problems.you_can_browse_and_discuss_problems_now')}</p>
             <button
               type="button"
-              aria-label="Dismiss profile reminder"
+              aria-label={t('problems.dismiss_profile_reminder')}
               onClick={() => setBanner(false)}
             >
               ×
@@ -82,21 +91,21 @@ export function ProblemsPage() {
       )}
       <div className="problem-stats">
         {[
-          ['24', 'Open problems'],
-          ['1,250,000 DZD', 'Total rewards'],
-          ['18', 'Companies'],
+          [formatNumber(24), 'Open problems'],
+          [`${formatNumber(1250000)} ${t('problems.dzd')}`, 'Total rewards'],
+          [formatNumber(18), 'Companies'],
         ].map(([value, label]) => (
           <div key={label}>
             <strong>{value}</strong>
-            <span>{label}</span>
+            <span>{t(label)}</span>
           </div>
         ))}
       </div>
       <div className="problems-list-grid">
         <aside className="problem-filters">
-          <h2 className="section-title">Filter results</h2>
+          <h2 className="section-title">{t('problems.filter_results')}</h2>
           <fieldset>
-            <legend>Difficulty</legend>
+            <legend>{t('problems.difficulty')}</legend>
             {(['Small', 'Medium', 'Expert'] as const).map((value) => (
               <label className="difficulty-option" key={value}>
                 <input
@@ -110,7 +119,7 @@ export function ProblemsPage() {
             ))}
           </fieldset>
           <fieldset>
-            <legend>Skills</legend>
+            <legend>{t('problems.skills')}</legend>
             <div className="problem-filter-skills">
               {['Python', 'C', 'IoT', 'AI / ML', 'Backend', 'SQL'].map((skill) => (
                 <Chip
@@ -124,10 +133,10 @@ export function ProblemsPage() {
             </div>
           </fieldset>
           <fieldset>
-            <legend>Reward range</legend>
+            <legend>{t('problems.reward_range')}</legend>
             <div className="reward-sliders">
               <label className="sr-only" htmlFor="reward-min">
-                Minimum reward
+                {t('problems.minimum_reward')}
               </label>
               <input
                 id="reward-min"
@@ -139,7 +148,7 @@ export function ProblemsPage() {
                 onChange={(e) => update('min', String(Math.min(Number(e.target.value), max)))}
               />
               <label className="sr-only" htmlFor="reward-max">
-                Maximum reward
+                {t('problems.maximum_reward')}
               </label>
               <input
                 id="reward-max"
@@ -152,18 +161,22 @@ export function ProblemsPage() {
               />
             </div>
             <div className="reward-labels">
-              <span>{min.toLocaleString('en-US')} DZD</span>
-              <span>{max.toLocaleString('en-US')} DZD</span>
+              <span>
+                {formatNumber(min)} {t('problems.dzd')}
+              </span>
+              <span>
+                {formatNumber(max)} {t('problems.dzd')}
+              </span>
             </div>
           </fieldset>
           <Button variant="ghost" size="sm" onClick={reset}>
-            Reset
+            {t('problems.reset')}
           </Button>
         </aside>
-        <section className="problem-results" aria-label="Problems">
+        <section className="problem-results" aria-label={t('problems.problems')}>
           <Input
-            aria-label="Search problems"
-            placeholder="Search for a problem, company or skill…"
+            aria-label={t('problems.search_problems')}
+            placeholder={t('problems.search_for_a_problem_company_or_skill')}
             leftIcon={<FigmaIcon asset="9a614" size={20} />}
             value={query}
             onChange={(e) => update('q', e.target.value)}
@@ -180,30 +193,29 @@ export function ProblemsPage() {
             ))}
           </div>
           <p className="sr-only" role="status">
-            {found.length} problems found
+            {t('counts.results', { count: found.length })}
           </p>
           {found.map((problem) => (
             <ProblemCard key={problem.id} problem={problem} />
           ))}
           {!found.length && (
             <div className="problem-card">
-              <h2 className="section-title">No matching problems</h2>
-              <p>Try a different search or reset your filters.</p>
+              <h2 className="section-title">{t('problems.no_matching_problems')}</h2>
+              <p>{t('problems.try_a_different_search_or_reset_your')}</p>
               <Button variant="secondary" onClick={reset}>
-                Reset filters
+                {t('problems.reset_filters')}
               </Button>
             </div>
           )}
           {found.length > 0 && (
             <div className="problem-more">
               <Button variant="secondary" disabled={more} onClick={() => setMore(true)}>
-                Show more problems
+                {t('problems.show_more_problems')}
               </Button>
               {more && (
-                <p role="status" className="caption text-muted">
-                  Only four demo problems are available. Adjust filters to see the full set. No
-                  additional records are connected.
-                </p>
+                <Notice className="caption text-muted" onDismiss={() => setMore(false)}>
+                  {t('problems.only_four_demo_problems_are_available_adjust')}
+                </Notice>
               )}
             </div>
           )}

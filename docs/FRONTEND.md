@@ -34,13 +34,14 @@ npm run dev
 
 Application routes:
 
+- `/` — Community landing page
 - `/signin` — Sign in
 - `/signup` — Sign up
 - `/community` — Community
 - `/problems` — Industrial Problems
 - `/profile-setup` — Solver profile
 
-The `/` route is intentionally blank.
+The landing page follows the user-supplied desktop screenshot, with the original dinosaur asset, community introduction, role comparison and signup/browsing links. About uses the shared dismissible placeholder notice. Home shares the Community navbar and shows its visitor information below it. English/Arabic localization and RTL behavior are documented in `docs/LOCALIZATION.md`. Mobile uses the shared hamburger menu and stacked sections; no mobile design was supplied.
 
 ## Demo Accounts
 

@@ -1,5 +1,7 @@
+import { t, useI18n } from '@/i18n'
 import { Button } from '@/components/ui/Button'
 export function GoogleButton({ children, onClick }: { children: string; onClick: () => void }) {
+  useI18n()
   return (
     <Button
       variant="outline"
@@ -16,10 +18,11 @@ export function GoogleButton({ children, onClick }: { children: string; onClick:
   )
 }
 export function EmailDivider() {
+  useI18n()
   return (
     <div className="flex w-full items-center gap-3">
       <span className="bg-subtle h-[2px] flex-1" />
-      <span className="caption text-muted">or with email</span>
+      <span className="caption text-muted">{t('googleButton.or_with_email')}</span>
       <span className="bg-subtle h-[2px] flex-1" />
     </div>
   )

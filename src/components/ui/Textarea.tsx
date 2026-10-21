@@ -1,3 +1,4 @@
+import { t, useI18n } from '@/i18n'
 import { forwardRef, useId, useLayoutEffect, useRef, type TextareaHTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -10,6 +11,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   { label, helperText, error, id, required, className, autoGrow = false, ...props },
   ref
 ) {
+  const { language } = useI18n()
   const generatedId = useId()
   const inputId = id ?? generatedId
   const message = error || helperText
@@ -24,17 +26,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
     resize()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
-  }, [autoGrow, props.value])
+  }, [autoGrow, props.value, language])
   return (
     <div className="flex w-full min-w-0 flex-col gap-[6px]">
       {label && (
         <label className="label" htmlFor={inputId}>
-          {label}
+          {t(label)}
           {required && ' *'}
         </label>
       )}
       <textarea
         {...props}
+        dir={props.dir ?? (props.value ? 'auto' : undefined)}
         id={inputId}
         ref={(node) => {
           element.current = node
@@ -51,7 +54,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
           id={`${inputId}-message`}
           className={cn('caption', error ? 'text-error-text' : 'text-muted')}
         >
-          {message}
+          {t(message)}
         </p>
       )}
     </div>

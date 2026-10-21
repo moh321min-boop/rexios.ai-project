@@ -1,0 +1,56 @@
+/* One shared language state controls direction; grids and flex rows inherit it. */
+.language-switch {
+  flex-shrink: 0;
+}
+.dismissible-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.dismissible-notice > div {
+  flex: 1;
+  min-width: 0;
+}
+.dismissible-notice > button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  min-height: 28px;
+  border-radius: 4px;
+}
+.dismissible-notice > button:hover {
+  background: var(--color-sunken);
+}
+input[dir='ltr'],
+pre,
+code {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+[dir='rtl'] .directional-icon,
+[dir='rtl'] .problem-reply > svg {
+  transform: scaleX(-1);
+}
+[dir='rtl'] .landing-badge,
+[dir='rtl'] .topic-tag:dir(rtl) {
+  font-family: var(--font-sans);
+  letter-spacing: normal;
+}
+[dir='rtl'] .landing-question-bubble,
+[dir='rtl'] .landing-answer-bubble {
+  white-space: normal;
+  max-width: 78%;
+  text-align: start;
+}
+[dir='rtl'] .auth-card .heading,
+[dir='rtl'] .heading {
+  line-height: 1.5;
+}
+[dir='rtl'] .landing-intro h1 {
+  line-height: 1.5;
+}
+[dir='rtl'] .landing-page .button-link {
+  white-space: normal;
+  text-align: center;
+}

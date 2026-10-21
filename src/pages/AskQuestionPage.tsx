@@ -1,3 +1,5 @@
+import { Notice } from '@/components/shared/Notice'
+import { t, useI18n } from '@/i18n'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
@@ -20,14 +22,15 @@ const tagOptions = [
   'React',
 ]
 const tips = [
-  'Summarize the problem in one clear title',
-  'Say what you tried and what happened',
-  'Attach relevant code or specs',
-  'Choose tags that describe the field precisely',
-  "Don't share confidential company information",
+  'askQuestion.summarize_the_problem_in_one_clear_title',
+  'askQuestion.say_what_you_tried_and_what_happened',
+  'askQuestion.attach_relevant_code_or_specs',
+  'askQuestion.choose_tags_that_describe_the_field_precisely',
+  'mockData.don_t_share_confidential_company_information',
 ]
 const tagNames: Record<string, string> = { 'Embedded Systems': 'EMBEDDED', 'AI / ML': 'AI/ML' }
 export function AskQuestionPage() {
+  useI18n()
   const { user, triggerAuthPrompt } = useAuth()
   const { draft, saveDraft, addQuestion } = useCommunity()
   const navigate = useNavigate()
@@ -39,7 +42,7 @@ export function AskQuestionPage() {
   const [notice, setNotice] = useState('')
   function toggleTag(tag: string) {
     if (!tags.includes(tag) && tags.length === 5) {
-      setErrors((previous) => ({ ...previous, tags: 'Choose up to 5 tags.' }))
+      setErrors((previous) => ({ ...previous, tags: 'askQuestion.choose_up_to_5_tags' }))
       return
     }
     setTags((previous) =>
@@ -50,10 +53,9 @@ export function AskQuestionPage() {
   function submit(event: FormEvent) {
     event.preventDefault()
     const next: Record<string, string> = {}
-    if (title.trim().length < 15) next.title = 'Title must be at least 15 characters.'
-    if (body.trim().length < 30)
-      next.body = 'Please describe the problem in at least 30 characters.'
-    if (!tags.length) next.tags = 'Choose at least one tag.'
+    if (title.trim().length < 15) next.title = 'askQuestion.title_must_be_at_least_15_characters'
+    if (body.trim().length < 30) next.body = 'askQuestion.please_describe_the_problem_in_at_least'
+    if (!tags.length) next.tags = 'askQuestion.choose_at_least_one_tag'
     setErrors(next)
     if (Object.keys(next).length) {
       focusFirstError()
@@ -104,34 +106,36 @@ export function AskQuestionPage() {
     <div className="app-content profile-content ask-content">
       <div className="min-w-0">
         <form className="card profile-form" onSubmit={submit} noValidate>
-          <h1 className="heading">Ask a question</h1>
-          <p className="text-muted">Describe your problem clearly so the community can help.</p>
+          <h1 className="heading">{t('askQuestion.ask_a_question')}</h1>
+          <p className="text-muted">
+            {t('askQuestion.describe_your_problem_clearly_so_the_community')}
+          </p>
           <Input
             id="question-title"
-            label="Question title"
+            label={t('askQuestion.question_title')}
             required
             value={title}
             onChange={(event) => setTitle(event.target.value)}
-            placeholder="e.g. How do I reduce temperature sensor noise?"
-            helperText="Be specific: at least 15 characters"
+            placeholder={t('askQuestion.e_g_how_do_i_reduce_temperature')}
+            helperText={t('askQuestion.be_specific_at_least_15_characters')}
             error={errors.title}
           />
           <MarkdownEditor
             id="question-body"
-            label="Problem details"
+            label={t('askQuestion.problem_details')}
             required
             value={body}
             onValueChange={setBody}
-            placeholder="Explain the problem and what you tried, and attach code if any…"
-            helperText="Supports Markdown and code blocks"
+            placeholder={t('askQuestion.explain_the_problem_and_what_you_tried')}
+            helperText={t('askQuestion.supports_markdown_and_code_blocks')}
             error={errors.body}
           />
           <fieldset className="tag-field" aria-describedby={errors.tags ? 'tag-error' : undefined}>
-            <legend className="label">Tags * — choose up to 5</legend>
+            <legend className="label">{t('askQuestion.tags_choose_up_to_5')}</legend>
             <div
               className="flex flex-wrap gap-[10px]"
               role="group"
-              aria-label="Question tags"
+              aria-label={t('askQuestion.question_tags')}
               tabIndex={errors.tags ? -1 : undefined}
               aria-invalid={!!errors.tags}
             >
@@ -148,30 +152,34 @@ export function AskQuestionPage() {
             </div>
             {errors.tags && (
               <p id="tag-error" className="caption text-error-text" role="alert">
-                {errors.tags}
+                {t(errors.tags)}
               </p>
             )}
           </fieldset>
           {warning && (
             <div className="question-warning">
               <FigmaIcon asset="0aee9" size={24} />
-              <p>Don't share confidential or sensitive company data.</p>
-              <button type="button" aria-label="Dismiss warning" onClick={() => setWarning(false)}>
+              <p>{t('askQuestion.don_t_share_confidential_or_sensitive_company')}</p>
+              <button
+                type="button"
+                aria-label={t('askQuestion.dismiss_warning')}
+                onClick={() => setWarning(false)}
+              >
                 <FigmaIcon asset="bbd93" size={18} />
               </button>
             </div>
           )}
           <div className="bg-subtle h-[2px]" />
           <div className="editor-actions">
-            <Button type="submit">Post question</Button>
+            <Button type="submit">{t('askQuestion.post_question')}</Button>
             <Button
               variant="secondary"
               onClick={() => {
                 saveDraft({ title, body, tags })
-                setNotice('Draft saved for this preview session. It will be lost on reload.')
+                setNotice('askQuestion.draft_saved_for_this_preview_session_it')
               }}
             >
-              Save as draft
+              {t('askQuestion.save_as_draft')}
             </Button>
             <Button
               className="shadow-none"
@@ -181,26 +189,21 @@ export function AskQuestionPage() {
                 navigate('/community')
               }}
             >
-              Cancel
+              {t('askQuestion.cancel')}
             </Button>
           </div>
-          {notice && (
-            <p role="status" className="inline-notice">
-              {notice}
-            </p>
-          )}
+          {notice && <Notice onDismiss={() => setNotice('')}>{notice}</Notice>}
         </form>
         <p className="caption text-muted mt-5">
-          Frontend preview: questions and drafts stay in memory until reload. Cancel keeps your
-          draft for this session. No data is submitted to a server.
+          {t('askQuestion.frontend_preview_questions_and_drafts_stay_in')}
         </p>
       </div>
       <aside className="question-tips">
-        <h2 className="section-title">Tips for a good question</h2>
+        <h2 className="section-title">{t('askQuestion.tips_for_a_good_question')}</h2>
         {tips.map((tip) => (
           <p key={tip}>
             <FigmaIcon asset="3d3b0" size={20} />
-            <span>{tip}</span>
+            <span>{t(tip)}</span>
           </p>
         ))}
       </aside>

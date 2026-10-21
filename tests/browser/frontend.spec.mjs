@@ -359,13 +359,10 @@ test('temporary signup is honest, works in memory and disappears on reload', asy
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()
   await expect(page.getByText(/Email or password is incorrect/)).toBeVisible()
 })
-test('blank landing, mobile navigation link close, long content and short laptop', async ({
-  page,
-}) => {
+test('landing, mobile navigation link close, long content and short laptop', async ({ page }) => {
   await page.goto('/')
-  expect(await page.locator('#root').innerHTML()).toBe('')
-  expect(await page.locator('body').evaluate((e) => getComputedStyle(e).backgroundColor)).toBe(
-    'rgb(255, 255, 255)'
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Where tech skills meet real problems'
   )
   await login(page, 'solver')
   await page.setViewportSize({ width: 375, height: 812 })
